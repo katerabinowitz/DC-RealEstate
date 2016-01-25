@@ -50,7 +50,7 @@ Build1216$PropType<-ifelse(grepl("SINGLE FAM|SFD|S.F DWELLING|SINGLE-FAMILY|S.F.
                     ifelse(grepl("APARTMENT|UNIT|TWO FAMILY|TWO-FAMILY|2 FAMILY|2 FAMILLY|MIXED USE|MIXED-USE|FLAT",Build1216$DESC_OF_WORK)
                           | grepl("CONDO|MULTI USE|9 STORY RESIDENTIAL BUILDING|DUPLEX|MULTI-FAMILY|MULTIFAMILY",Build1216$DESC_OF_WORK)
                           | grepl("9-STORY BUILDING FOR FOREIGN|FIVE STORY RESIDENTIAL|NEW 3 STORY BUILDING WITH A ROOF DECK",
-                          Build1216$DESC_OF_WORK),"Multi Family",
+                          Build1216$DESC_OF_WORK),"3+ Units",
                         ifelse(grepl("TOWNHOUSE|TOWNHOME|NEW HOUSE|BEDROOM HOUSE|3 STORY HOUSE|STORY HOUSE|TOWN HOME",Build1216$DESC_OF_WORK)
                               |grepl("TOWN HOUSE|SEMI DETACHED DWELLING|ROW HOME|HOME|STORY SEMI DETATCHED HOUSE",
                           Build1216$DESC_OF_WORK),"Single Family",NA)))
@@ -70,10 +70,10 @@ SFD<-SFD[order(SFD$FULL_ADDRESS),]
 SFD<-subset(SFD,!grepl("WOOD PERGOLA|ELEVATOR ONLY|EXISTING POOLHOUSE|2013 SOLAR DEC|5TH YOUTH RESIDENTIAL",
                        SFD$DESC_OF_WORK))
 SFD$PropType<-ifelse(grepl("2 UNIT BUILDING|10-UNIT APARTMENT BUILDING|MIXED USE",SFD$DESC_OF_WORK),
-                           "Multi Family",SFD$PropType)
+                           "3+ Units",SFD$PropType)
 
 #Check Multi Family for mismatches
-Multi<-subset(Build1216,Build1216$PropType=="Multi Family")
+Multi<-subset(Build1216,Build1216$PropType=="3+ Units")
 Multi<-subset(Multi,!(grepl("MEDICAL CLINIC|CT MOBILE UNIT|HOTEL|BASEBALL DUGOUTS",Multi$DESC_OF_WORK)
                       | grepl("COMMUNITY USE|TEMPORARY ENGINE COMPANY 14|PROPERTY MANAGEMENT AND COMMUNITY BUILDING",Multi$DESC_OF_WORK)
                       | grepl("COMMUNITY CENTER|HAROLD J. GORDON|SELF STORAGE FACILITY|15 HIGH PRIVATE GARAGE",Multi$DESC_OF_WORK)
@@ -87,11 +87,11 @@ Multi$PropType<-ifelse(grepl("ATTACHED TOWN HOME THAT IS PART OF A 20 UNIT|SIDE 
 ResBuilding<-rbind(SFD,Multi)
 
 #Differentiate between 2 unit and 2+unit multi family
-Multi<-subset(ResBuilding,ResBuilding$PropType=="Multi Family")
+Multi<-subset(ResBuilding,ResBuilding$PropType=="3+ Units")
 Multi$PropType<-ifelse(grepl(" 2 UNIT|TWO UNIT|TWO-UNIT|TWO FAMILY| 2 FAMILLY|TWO-FAMILY| 2 FAMILY| 2-UNIT|DUPLEX|TWO (2) UNIT|(2 UNITS)|2 NEW DWELLING UNIT|2 DWELLING UNIT",
-                             Multi$DESC_OF_WORK),"Multi-Two Unit",Multi$PropType)
-Multi$PropType<-ifelse(Multi$FULL_ADDRESS %in% c("1400 K ST SE","1402 K ST SE","1404 K ST SE"), "Multi-Two Unit",
-                       ifelse(Multi$FULL_ADDRESS %in% c("1341 IRVING ST NW"),"Multi Family",Multi$PropType))
+                             Multi$DESC_OF_WORK),"2 Units",Multi$PropType)
+Multi$PropType<-ifelse(Multi$FULL_ADDRESS %in% c("1400 K ST SE","1402 K ST SE","1404 K ST SE"), "2 Units",
+                       ifelse(Multi$FULL_ADDRESS %in% c("1341 IRVING ST NW"),"3+ Units",Multi$PropType))
 
 #All residential builds since 2012 differentiating b/w SFD, duplex and multi
 ResBuilding<-rbind(SFD,Multi)
