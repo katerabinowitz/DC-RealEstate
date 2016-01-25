@@ -105,13 +105,9 @@ noMoreNull<-cbind(NullIsland,Address)[-c(20:21)]
 colnames(noMoreNull)[c(38:39)]<-c("LONGITUDE","LATITUDE")
 
 ResBuildingOut<-rbind(neverNull,noMoreNull)
-ResBuildingOut<-subset(ResBuildingOut, abs(ResBuildingOut$LONGITUDE)<80)
+ResBuildingOut<-subset(ResBuildingOut, abs(ResBuildingOut$LONGITUDE)<80)[c(3,20,21,39)]
 
 write.csv(ResBuildingOut,"ResBuild.csv",row.names=FALSE)
-GeoFlip<-GeoFlip[c(2:3)]
-
-addAll<-SpatialPoints(GeoFlip, proj4string=CRS(as.character("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")))
-HoodID <- over(addAll, map )
 
 clusterMap = readOGR("http://opendata.dc.gov/datasets/f6c703ebe2534fc3800609a07bad8f5b_17.geojson", "OGRGeoJSON")
 ResLL<-ResBuildingOut[c(21,20)]
