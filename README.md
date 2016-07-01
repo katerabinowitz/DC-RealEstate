@@ -16,3 +16,10 @@ DMPED development projects across wards, time and property type
 Data Source: [OCTO Project Pipeline Database](https://octo.quickbase.com/db/bgk8b4c4n?a=Mobile_Dashboard)
 
 Result: www.datalensdc.com/10-year-dc-development.html
+
+#####DCResHomesExt (folder)
+Mapping DC home exteriors
+
+Data Source: [Residential Mass Appraisals](http://opendata.dc.gov/datasets/c5fb3fbe4c694a59a6eef7bf5f8bc49a_25)
+
+Result: http://www.datalensdc.com/another-brick.html
