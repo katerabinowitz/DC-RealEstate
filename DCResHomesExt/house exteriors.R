@@ -53,12 +53,12 @@ str(assess)
 table(assess$STRUCT_D)
 assess$structureGroup<-ifelse(assess$STRUCT_D %in% c("Multi","Multi Senr"),"Multi",
                         ifelse(assess$STRUCT_D %in% c("Row End","Row Inside"),"Row House",
-                        ifelse(assess$STRUCT_D %in% c("Default","Vacant Land","NA's"),"Other",
-                          ifelse(assess$STRUCT_D %in% c("Town Inside","Town End"),"Town House",
-                                 assess$STRUCT_D))))
+                          ifelse(assess$STRUCT_D %in% c("Default","Vacant Land","NA's"),"Other",
+                            ifelse(assess$STRUCT_D %in% c("Town Inside","Town End"),"Town House",
+                              assess$STRUCT_D))))
 table(assess$STRUCT_D,assess$structureGroup)
 strWard<-count(assess, c("WARD","structureGroup"))
-per <- ddply(strByWard, .(WARD), summarise, structureGroup = structureGroup, pct = freq / sum(freq))
+per <- ddply(strWard, .(WARD), summarise, structureGroup = structureGroup, pct = freq / sum(freq))
 strByWard <- dcast(per, WARD ~ structureGroup)
 
 quantile(assess$LANDAREA, c(.05,.25, .5,.75,.9,.95,.99)) 
@@ -79,5 +79,5 @@ resSum<-merge(row,medYL,by="WARD")
 write.csv(resSum,"resGroupSum.csv")
 
 colnames(assess)
-resGroupAssess<-assess[c(48:49,52:54)]
+resGroupAssess<-assess[c(2,48:49,52:54)]
 write.csv(resGroupAssess,"resGroupAssess.csv")
