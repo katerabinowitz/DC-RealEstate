@@ -40,3 +40,44 @@ extM<-melt(extW,id="WARD")
 #export csv of households and ward aggregates
 write.csv(assess,"resAssess.csv")
 write.csv(extM,"wardExtSum.csv")
+
+### Groupings for Inner/Outer City Home Differences - home type, yr built, land area ### 
+### Groupings for Inner/Outer City Home Differences - home type, yr built, land area ### 
+### Groupings for Inner/Outer City Home Differences - home type, yr built, land area ### 
+rm(list=ls())
+assess<-read.csv("resAssess.csv",
+                 fill = FALSE, strip.white = TRUE,stringsAsFactors=FALSE)
+colnames(assess)
+str(assess)
+
+table(assess$STRUCT_D)
+assess$structureGroup<-ifelse(assess$STRUCT_D %in% c("Multi","Multi Senr"),"Multi",
+                        ifelse(assess$STRUCT_D %in% c("Row End","Row Inside"),"Row House",
+                        ifelse(assess$STRUCT_D %in% c("Default","Vacant Land","NA's"),"Other",
+                          ifelse(assess$STRUCT_D %in% c("Town Inside","Town End"),"Town House",
+                                 assess$STRUCT_D))))
+table(assess$STRUCT_D,assess$structureGroup)
+strWard<-count(assess, c("WARD","structureGroup"))
+per <- ddply(strByWard, .(WARD), summarise, structureGroup = structureGroup, pct = freq / sum(freq))
+strByWard <- dcast(per, WARD ~ structureGroup)
+
+quantile(assess$LANDAREA, c(.05,.25, .5,.75,.9,.95,.99)) 
+assess$landGroup<-ifelse(assess$LANDAREA<1600,"Less than 1600 sq.ft.",
+                    ifelse(assess$LANDAREA<2500,"1600-2500 sq.ft.",
+                      ifelse(assess$LANDAREA<4000,"2500-4000 sq.ft.",
+                          "4000+ sq.ft.")))
+
+quantile(assess$AYB, c(.05, .25, .5,.75,.9,.95,.99),na.rm=TRUE) 
+sum(is.na(assess$AYB))
+assess$yearGroup<-ifelse(assess$AYB<1915,"Before 1915",
+                         ifelse(assess$AYB<1930,"1915-30",
+                                ifelse(assess$AYB<1950,"1930-50",
+                                       "After 1950")))
+medYL<-ddply(assess, .(WARD), summarize, "medYear"= median(AYB,na.rm=TRUE), "medLand" = median(LANDAREA,na.rm=TRUE))
+row<-strByWard[c(1,4)]
+resSum<-merge(row,medYL,by="WARD")
+write.csv(resSum,"resGroupSum.csv")
+
+colnames(assess)
+resGroupAssess<-assess[c(48:49,52:54)]
+write.csv(resGroupAssess,"resGroupAssess.csv")
