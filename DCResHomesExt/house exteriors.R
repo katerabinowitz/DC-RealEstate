@@ -81,3 +81,7 @@ write.csv(resSum,"resGroupSum.csv")
 colnames(assess)
 resGroupAssess<-assess[c(2,48:49,52:54)]
 write.csv(resGroupAssess,"resGroupAssess.csv")
+
+resGroups<- SpatialPointsDataFrame(resGroupAssess[,c(2,3)],resGroupAssess[,-c(2,3)])
+
+writeOGR(resGroups, 'resGroups.geojson','resGroups', driver='GeoJSON',check_exists = FALSE)
