@@ -79,6 +79,8 @@ resSum<-merge(row,medYL,by="WARD")
 resSum$zero<-rep(0,8)
 colnames(resSum)[c(2)]<-"rowHomeP"
 resSum$notRowP<-round(((1-resSum$rowHomeP)*100),2)
+#creating a dummy medLand to plot so less overlap, but using correct N for tooltip
+resSum$adjustLot<-ifelse(resSum$WARD==1,1700,resSum$medLand)
 write.csv(resSum,"resGroupSum.csv")
 
 colnames(assess)
