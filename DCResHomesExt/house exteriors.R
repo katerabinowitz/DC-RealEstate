@@ -77,6 +77,7 @@ medYL<-ddply(assess, .(WARD), summarize, "medYear"= median(AYB,na.rm=TRUE), "med
 row<-strByWard[c(1,4)]
 resSum<-merge(row,medYL,by="WARD")
 resSum$zero<-rep(0,8)
+colnames(resSum)[c(2)]<-"rowHomeP"
 write.csv(resSum,"resGroupSum.csv")
 
 colnames(assess)
